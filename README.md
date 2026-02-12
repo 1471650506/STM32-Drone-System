@@ -1,4 +1,4 @@
-# STM32 自研四轴飞行器系统 (STM32-Drone-System)
+# STM32 四轴飞行器系统 (STM32-Drone-System)
 
 ## 📖 项目简介
 本项目是一个从零开发的四轴飞行器系统，包含**飞控端 (Flight Controller)**、**遥控器端 (Remote Control)** 以及配套的 **PCB 硬件设计**。
