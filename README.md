@@ -7,7 +7,7 @@
 ## 📂 仓库结构
 * **Drone_Code/**: 飞控端固件，基于 STM32F411CEU6。
 * **Remote_Code/**: 遥控器端固件，基于 STM32F103C8T6。
-* **PCB_Design/**: 嘉立创 EDA (EasyEDA) 设计的原理图与 PCB 源文件。
+* **PCB_Design**: 嘉立创 EDA (EasyEDA) 设计的原理图与 PCB 源文件。
 
 ## 🛠️ 技术栈 (Tech Stack)
 
