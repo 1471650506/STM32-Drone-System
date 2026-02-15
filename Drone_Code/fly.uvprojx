@@ -338,9 +338,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F411xE,USE_STDPERIPH_DRIVER</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F411xE</Define>
               <Undefine></Undefine>
-              <IncludePath>.\library;.\start;.\system;.\user;..\fly;.\eMPL</IncludePath>
+              <IncludePath>.\user;.\start;.\Drivers\BSP;.\Drivers\Devices;.\Middlewares\eMPL;.\Middlewares\freertos;.\Middlewares\freertos\portable\RVDS\ARM_CM4F;.\Modules\Algorithm;.\Middlewares\library;.\Middlewares\freertos\portable\RVDS\ARM_CM4F;.\Middlewares\freertos\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -382,527 +382,437 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>bsp</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\BSP\bsp_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_adc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\BSP\bsp_adc.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_i2c_soft.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\BSP\bsp_i2c_soft.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_i2c_soft.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\BSP\bsp_i2c_soft.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\BSP\bsp_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_spi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\BSP\bsp_spi.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\BSP\bsp_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_usart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\BSP\bsp_usart.h</FilePath>
+            </File>
+            <File>
+              <FileName>Delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\BSP\Delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>Delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\BSP\Delay.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>devices</GroupName>
+          <Files>
+            <File>
+              <FileName>dev_motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\Devices\dev_motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>dev_motor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\Devices\dev_motor.h</FilePath>
+            </File>
+            <File>
+              <FileName>dev_mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\Devices\dev_mpu6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>dev_mpu6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\Devices\dev_mpu6050.h</FilePath>
+            </File>
+            <File>
+              <FileName>dev_mpu6050_reg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\Devices\dev_mpu6050_reg.h</FilePath>
+            </File>
+            <File>
+              <FileName>dev_nrf24l01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\Devices\dev_nrf24l01.c</FilePath>
+            </File>
+            <File>
+              <FileName>dev_nrf24l01.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\Devices\dev_nrf24l01.h</FilePath>
+            </File>
+            <File>
+              <FileName>OLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Drivers\Devices\OLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>OLED.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\Devices\OLED.h</FilePath>
+            </File>
+            <File>
+              <FileName>OLED_Font.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Drivers\Devices\OLED_Font.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>empl</GroupName>
+          <Files>
+            <File>
+              <FileName>dmpKey.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Middlewares\eMPL\dmpKey.h</FilePath>
+            </File>
+            <File>
+              <FileName>dmpmap.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Middlewares\eMPL\dmpmap.h</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\eMPL\inv_mpu.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Middlewares\eMPL\inv_mpu.h</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\eMPL\inv_mpu_dmp_motion_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Middlewares\eMPL\inv_mpu_dmp_motion_driver.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>freertos</GroupName>
+          <Files>
+            <File>
+              <FileName>croutine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\croutine.c</FilePath>
+            </File>
+            <File>
+              <FileName>event_groups.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\event_groups.c</FilePath>
+            </File>
+            <File>
+              <FileName>list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\list.c</FilePath>
+            </File>
+            <File>
+              <FileName>queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\stream_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\timers.c</FilePath>
+            </File>
+            <File>
+              <FileName>port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\portable\RVDS\ARM_CM4F\port.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap_4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Middlewares\freertos\portable\MemMang\heap_4.c</FilePath>
+            </File>
+            <File>
+              <FileName>portmacro.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Middlewares\freertos\portable\RVDS\ARM_CM4F\portmacro.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>library</GroupName>
           <Files>
             <File>
               <FileName>misc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\misc.c</FilePath>
-            </File>
-            <File>
-              <FileName>misc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\misc.h</FilePath>
+              <FilePath>.\Middlewares\library\misc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_adc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_adc.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_adc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_can.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_can.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_can.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cec.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_cec.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_cec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_cec.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_cec.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_crc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_crc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_crc.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_crc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_cryp.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_cryp.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_cryp.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_cryp.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_cryp_aes.c</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_cryp_aes.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_des.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_cryp_des.c</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_cryp_des.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_tdes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_cryp_tdes.c</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_cryp_tdes.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dac.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_dac.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dac.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_dac.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_dac.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dbgmcu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_dbgmcu.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dbgmcu.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_dbgmcu.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_dbgmcu.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dcmi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_dcmi.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dcmi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_dcmi.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_dcmi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dfsdm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_dfsdm.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dfsdm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_dfsdm.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_dfsdm.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dma.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_dma.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dma.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_dma.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_dma.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dma2d.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_dma2d.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dma2d.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_dma2d.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_dma2d.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dsi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_dsi.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dsi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_dsi.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_dsi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_exti.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_exti.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_exti.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_exti.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_flash.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_flash.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_flash.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_flash_ramfunc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_flash_ramfunc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_flash_ramfunc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_flash_ramfunc.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_flash_ramfunc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_fmpi2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_fmpi2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_fmpi2c.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_fmpi2c.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_fmpi2c.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_gpio.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_gpio.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_gpio.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_hash.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_hash.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_hash.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_hash.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash_md5.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_hash_md5.c</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_hash_md5.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash_sha1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_hash_sha1.c</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_hash_sha1.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_i2c.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_i2c.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_i2c.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_iwdg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_iwdg.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_iwdg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_iwdg.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_iwdg.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_lptim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_lptim.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_lptim.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_lptim.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_lptim.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_ltdc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_ltdc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_ltdc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_ltdc.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_ltdc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_pwr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_pwr.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_pwr.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_pwr.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_pwr.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_qspi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_qspi.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_qspi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_qspi.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_qspi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rcc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_rcc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_rcc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_rcc.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_rcc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rng.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_rng.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_rng.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_rng.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_rng.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_rtc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_rtc.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_rtc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_sai.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_sai.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_sai.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_sai.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_sai.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_sdio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_sdio.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_sdio.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_sdio.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_sdio.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_spdifrx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_spdifrx.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_spdifrx.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_spdifrx.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_spdifrx.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_spi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_spi.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_spi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_syscfg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_syscfg.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_syscfg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_syscfg.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_syscfg.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_tim.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_tim.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_tim.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_usart.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_usart.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_usart.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_wwdg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\library\stm32f4xx_wwdg.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_wwdg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\library\stm32f4xx_wwdg.h</FilePath>
+              <FilePath>.\Middlewares\library\stm32f4xx_wwdg.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>system</GroupName>
+          <GroupName>alg</GroupName>
           <Files>
             <File>
-              <FileName>My_IIC.c</FileName>
+              <FileName>alg_imu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\system\My_IIC.c</FilePath>
+              <FilePath>.\Modules\Algorithm\alg_imu.c</FilePath>
             </File>
             <File>
-              <FileName>My_IIC.h</FileName>
+              <FileName>alg_imu.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\system\My_IIC.h</FilePath>
+              <FilePath>.\Modules\Algorithm\alg_imu.h</FilePath>
             </File>
             <File>
-              <FileName>OLED.c</FileName>
+              <FileName>alg_pid.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\system\OLED.c</FilePath>
+              <FilePath>.\Modules\Algorithm\alg_pid.c</FilePath>
             </File>
             <File>
-              <FileName>OLED.h</FileName>
+              <FileName>alg_pid.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\system\OLED.h</FilePath>
-            </File>
-            <File>
-              <FileName>OLED_Font.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\OLED_Font.h</FilePath>
-            </File>
-            <File>
-              <FileName>Delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\Delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>Delay.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\Delay.h</FilePath>
-            </File>
-            <File>
-              <FileName>MPU6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\MPU6050.c</FilePath>
-            </File>
-            <File>
-              <FileName>MPU6050.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\MPU6050.h</FilePath>
-            </File>
-            <File>
-              <FileName>MPU6050_Reg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\MPU6050_Reg.h</FilePath>
-            </File>
-            <File>
-              <FileName>MyI2C.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\MyI2C.c</FilePath>
-            </File>
-            <File>
-              <FileName>MyI2C.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\MyI2C.h</FilePath>
-            </File>
-            <File>
-              <FileName>IMU.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\IMU.c</FilePath>
-            </File>
-            <File>
-              <FileName>IMU.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\IMU.h</FilePath>
-            </File>
-            <File>
-              <FileName>My_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\My_spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>My_spi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\My_spi.h</FilePath>
-            </File>
-            <File>
-              <FileName>NRF24L01.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\NRF24L01.c</FilePath>
-            </File>
-            <File>
-              <FileName>NRF24L01.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\NRF24L01.h</FilePath>
-            </File>
-            <File>
-              <FileName>MY_USART1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\MY_USART1.c</FilePath>
-            </File>
-            <File>
-              <FileName>MY_USART1.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\MY_USART1.h</FilePath>
-            </File>
-            <File>
-              <FileName>PID.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\PID.c</FilePath>
-            </File>
-            <File>
-              <FileName>PID.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\PID.h</FilePath>
-            </File>
-            <File>
-              <FileName>ADC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\ADC.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADC.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\ADC.h</FilePath>
-            </File>
-            <File>
-              <FileName>Motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system\Motor.c</FilePath>
-            </File>
-            <File>
-              <FileName>Motor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\system\Motor.h</FilePath>
+              <FilePath>.\Modules\Algorithm\alg_pid.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -948,41 +858,6 @@
               <FileName>system_stm32f4xx.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\start\system_stm32f4xx.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>dmp</GroupName>
-          <Files>
-            <File>
-              <FileName>dmpKey.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\eMPL\dmpKey.h</FilePath>
-            </File>
-            <File>
-              <FileName>dmpmap.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\eMPL\dmpmap.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\eMPL\inv_mpu.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\eMPL\inv_mpu.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\eMPL\inv_mpu_dmp_motion_driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\eMPL\inv_mpu_dmp_motion_driver.h</FilePath>
             </File>
           </Files>
         </Group>

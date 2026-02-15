@@ -192,14 +192,14 @@ void NRF24L01_ADC_SendByte(void)
 //	 NRF24L01_SendByte[10] = ADC_V[4]>>8;
 	 NRF24L01_SendByte[11] = 0XFF;
 	 
-
+	NRF24L01_TxMode();
 	 
 	 SEND_strcutuer = NRF24L01_Send();
 	 
+	NRF24L01_RxMode();
 	
 	
-	
-	 Delay_ms(10);
+	 Delay_us(100);
 	 
 }
  
@@ -208,6 +208,11 @@ void NRF24L01_ADC_SendByte(void)
 {
 	float p =0;
 	uint8_t a = NRF24L01_Receive();
+	
+	if (a == 0)
+	{
+		
+		
 	uint8_t Battery = Battery_GetPercent(Battery_GetVoltage());
 	
 	
@@ -226,20 +231,31 @@ void NRF24L01_ADC_SendByte(void)
 	oled_menu_structuer[2] = Battery;					//本机电池
 //	oled_menu_structuer[3] = NRF24L01_ReceiveByte[4];  //这个是bmp读出的高度,但是bmp未安装
 	oled_menu_structuer[4] = NRF24L01_ReceiveByte[5];  //这个是收发计数,由无人机发出
-
-	return a;
+	
+	
+	return 0;
+	
+	
+	}
+	return 1;
 }
  
   uint8_t NRF24L01_ADC_ReceiveByte_Link(void)
 {
 	uint8_t a = NRF24L01_Receive_Link();
+	
+	if (a ==0)
+	{
+	
 	uint8_t Battery  = Battery_GetPercent(Battery_GetVoltage());
 	oled_menu_structuer[0] = NRF24L01_ReceiveByte[2];
 	oled_menu_structuer[1] = NRF24L01_ReceiveByte[6];  //数组[3]为无人机电池百分比显示,[6]为具体电压显示
 	oled_menu_structuer[2] = Battery;					//本机电池
 	oled_menu_structuer[4] = NRF24L01_ReceiveByte[5];  //这个是收发计数,由无人机发出
 	
-	return a;
+	return 0;
+	}
+	return 1;
 }
 
 
@@ -263,12 +279,13 @@ void link_init(void)
 		 {
 			NRF24L01_SendByte[1] = 0X00;
 			pid();
-			Delay_ms(100);
+//			Delay_ms(100);
 			NRF24L01_SendByte[1] = 0X0F;	
 			NRF24L01_ADC_SendByte();
 			
 			
 			 
+			 Delay_ms(1);
 			 
 			 NRF24L01_RxMode();
 			 
@@ -343,7 +360,6 @@ int main(void)
 		
 		link_init();
 		
-		NRF24L01_TxMode();
 	 
 	 while (1)
 	 {
@@ -377,12 +393,10 @@ int main(void)
 		 
 		 if (menu_count > 10)
 		 {
-			NRF24L01_RxMode();
 			 
 			 
 			 NRF24L01_ADC_ReceiveByte () ;
 			 
-			 NRF24L01_TxMode();
 		 }
 //		menu_structuer();
 		 
@@ -392,7 +406,6 @@ int main(void)
 			
 			NRF24L01_ADC_SendByte();
 			
-			NRF24L01_RxMode();
 			
 			
 			uint16_t wait_timeout = 0;
@@ -416,7 +429,6 @@ int main(void)
 			
 			count  =0;
 			
-			NRF24L01_TxMode();
 		}
 		 
 		 
@@ -434,7 +446,7 @@ int main(void)
 		
 		
 		
-	 
+		Delay_ms(10);
 	 }
 	 
 	 

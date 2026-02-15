@@ -325,7 +325,7 @@ void NRF24L01_RxMode(void)
 	 NRF24L01_WriteRge(NRF24L01_CONFIG,Config);
 	
 	
-	Delay_us (200);
+//	Delay_us (200);
 	 NRF24L01_W_CE(1);
 	
 	
@@ -343,7 +343,7 @@ void NRF24L01_TxMode(void)
 	
 	 NRF24L01_WriteRge(NRF24L01_CONFIG,Config);
 	
-	Delay_us(1500);
+//	Delay_us(1500);
 	
 	 NRF24L01_W_CE(1);
 }
@@ -374,8 +374,9 @@ void NRF24L01_Init()
 	
 	NRF24L01_ClearRxFIFO();
 	
+	Delay_ms(2);
 	
-//	NRF24L01_RxMode();
+	NRF24L01_RxMode();
 	
 	
 	
@@ -393,9 +394,17 @@ uint8_t NRF24L01_Send(void)
 	NRF24L01_WriteTxFIFO(NRF24L01_SendByte,NRF24L01_RX_SendByte);
 	NRF24L01_WriteRgeS(NRF24L01_RX_ADDR_P0,TxAddress,5);
 	
-	NRF24L01_TxMode();
+//	NRF24L01_TxMode();
 	
-		CONFIG = NRF24L01_ReadReg(NRF24L01_CONFIG);
+//		CONFIG = NRF24L01_ReadReg(NRF24L01_CONFIG);
+	
+	uint32_t timeout = 0;
+	
+	while (timeout < 50000)
+	{
+		
+		timeout++;
+		
 		Status = NRF24L01_ReadStatus();
 		if (Status&0X20)
 		{
@@ -413,7 +422,11 @@ uint8_t NRF24L01_Send(void)
 			return 2;
 		}
 
+	}
 	
+	NRF24L01_ClearTxFIFO();
+    NRF24L01_WriteRge(NRF24L01_STATUS, 0x70); // 清除所有标志
+    return 3;
 	
 }
 
@@ -421,12 +434,10 @@ uint8_t NRF24L01_Send(void)
 
 uint8_t NRF24L01_Receive(void)
 {
-	NRF24L01_RxMode();
 	
 	uint8_t CONFIG;
 	uint8_t Status;
 	Status = NRF24L01_ReadStatus();
-	CONFIG = NRF24L01_ReadReg(NRF24L01_CONFIG);
 	
 	
 	
@@ -439,14 +450,6 @@ uint8_t NRF24L01_Receive(void)
 		return 0;
 		
 	}
-//	if (timeout-- == 0) 
-//		{
-//			NRF24L01_Init();
-//			return 1;  
-//		}
-
-//	NRF24L01_ClearRxFIFO();
-//	NRF24L01_WriteRge(NRF24L01_STATUS,0X7E);
 		
 		return 1;
 }
@@ -455,13 +458,10 @@ uint8_t NRF24L01_Receive(void)
 
 uint8_t NRF24L01_Receive_Link(void)
 {
-	NRF24L01_RxMode();
 	
-	Delay_ms(500);
 	uint8_t CONFIG;
 	uint8_t Status;
 	Status = NRF24L01_ReadStatus();
-	CONFIG = NRF24L01_ReadReg(NRF24L01_CONFIG);
 	
 	
 	
@@ -474,14 +474,8 @@ uint8_t NRF24L01_Receive_Link(void)
 		return 0;
 		
 	}
-	if (timeout-- == 0) 
-		{
-			NRF24L01_Init();
-			return 1;  
-		}
 
-//	NRF24L01_ClearRxFIFO();
-//	NRF24L01_WriteRge(NRF24L01_STATUS,0X7E);
+
 		
 		return 1;
 		

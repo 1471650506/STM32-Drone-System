@@ -1,17 +1,25 @@
 #include "stm32f4xx.h"                  // Device header
-#include "My_IIC.h"
+#include "bsp_i2c_soft.h"
 #include "Oled.h"
 #include "Delay.h"
-#include "MPU6050.h"
-#include "MYI2C.h"
-#include "imu.h"
-#include "MY_USART1.h"
-#include "NRF24L01.h"
+#include "dev_mpu6050.h"
+#include "alg_imu.h"
+#include "bsp_usart.h"
+#include "dev_nrf24l01.h"
 #include "stdio.h"
-#include "PID.h"
-#include "ADC.h"
-#include "Motor.h"
+#include "alg_pid.h"
+#include "bsp_adc.h"
+#include "dev_motor.h"
 #include "Main.h"
+
+#include "FreeRTOS.h" 
+#include "task.h" 
+#include "FreeRTOS.h"
+#include "task.h"
+#include "portmacro.h"
+#include "queue.h"
+
+volatile uint16_t a,b;
 
 extern volatile uint8_t pid_execute_flag;
 extern uint8_t NRF24L01_SendByte[32];
@@ -23,9 +31,11 @@ volatile uint8_t count = 0;
 
 uint8_t Ack_Status = 0x0F;
 
+volatile uint16_t nrf_count = 0;
 
-
-
+TaskHandle_t PID_Task_Handler; // PID任务句柄
+TaskHandle_t NRF_Task_Handler; // NRF任务句柄
+TaskHandle_t INIT_Task_Handler; // 初始化任务句柄
 
 // typedef union {
 //    float f;          // 浮点视角 (存数据用)
@@ -81,15 +91,15 @@ void NRF24L01_ADC_SendByte(void)
 	NRF24L01_TxMode();
 	
 	
-	vbat = Battery_GetVoltage();
-	
-	p1 = (uint8_t)((vbat-3)*100);
-	
-	
-	
-	
-	
-	p = Battery_GetPercent(vbat);
+//	vbat = Battery_GetVoltage();
+//	
+//	p1 = (uint8_t)((vbat-3)*100);
+//	
+//	
+//	
+//	
+//	
+//	p = Battery_GetPercent(vbat);
 	
 	
 	
@@ -122,9 +132,7 @@ void NRF24L01_ADC_SendByte(void)
 	
 	NRF24L01_Send();
 	
-	Delay_ms(2);
 
-	NRF24L01_RxMode();
 }
  
  
@@ -140,6 +148,7 @@ uint8_t NRF24L01_ADC_ReceiveByte(void)
         return 0; // 没收到数据，直接返回
     }
 	 
+	taskENTER_CRITICAL();
 	
 	Receive.START =	 	NRF24L01_ReceiveByte[0] ;
 	Receive.CONTROL =	NRF24L01_ReceiveByte[1] ;
@@ -154,6 +163,8 @@ uint8_t NRF24L01_ADC_ReceiveByte(void)
 	Receive.off = 		NRF24L01_ReceiveByte[10];
 	Receive.STOP =		NRF24L01_ReceiveByte[11];
 	
+	
+	taskEXIT_CRITICAL();
 	
 	if (P<520)
 	{
@@ -249,12 +260,10 @@ void START_init(void)
 			
 			NRF24L01_TxMode();
 			
-			Delay_ms(100);
 			
 			NRF24L01_ADC_SendByte();
 			
 			
-			Delay_ms(100);
 			
 			NRF24L01_RxMode();
 			
@@ -273,78 +282,16 @@ void START_init(void)
 	
 }
 
-
-
-
-
-
-
-
-int main()
+void task_pid(void *pvParameters)
 {
-
-
- 	OLED_Init();
-	MPU6050_Init();
 	
-	MPU6050_Calibrate_Offset();
-	
-//	MPU6050_DMPInit();
-	USART1_Init(115200);
-//	NRF24L01_Init();
-	TIM3_PWM_Init();
-	
-	NRF24L01_SendByte[0]=0;
-	
-	NRF24L01_SendByte[1] = 0;
-	count = 0;
-	uint8_t a;
-	
-	ADC1_CH0_Init();
-	
-	NRF24L01_Init_();
-	
-	
-	
-	TIM4_Int_Init();
-	
-
-	
-	NRF24L01_RxMode();
-	
-	uint16_t nrf_count = 0;
-
-	START_init();
-	
-	PID_structuer_Init();
-	
-	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
-    IWDG_SetPrescaler(IWDG_Prescaler_64); 
-    IWDG_SetReload(250); 
-    IWDG_ReloadCounter();
-    IWDG_Enable();
-	
-	
+	TickType_t xLastWakeTime;  //创建时间点变量
+	const TickType_t xFrequency = pdMS_TO_TICKS(2);  //我要等待两个tick(2ms)
+	xLastWakeTime = xTaskGetTickCount(); //把当前的tick存入时间点变量
 	
 	while (1)
-	{		
-		
-		
-		IWDG_ReloadCounter();
-		
-		
-		if (NRF24L01_ADC_ReceiveByte() == 1)
-        {
-            
-            nrf_count = 0;
-			
-        }
-		
-		
-		
-		if (pid_execute_flag ==1)
-		{
-			pid_execute_flag = 0;
+	{
+			IWDG_ReloadCounter();
 			
 			nrf_count++;
 			
@@ -355,7 +302,7 @@ int main()
             {
                 TIM_CCR(0,0,0,0); 
                 Receive.off = 0X0F; 
-                continue; 
+//                continue; 
 				
             }
 			
@@ -363,17 +310,17 @@ int main()
 			IMU(&attitude,&G);
 			
 			
-//			//超过45度,锁死
-//			
-//			if (attitude.roll > 45.0f || attitude.roll < -45.0f || 
-//                attitude.pitch > 45.0f || attitude.pitch < -45.0f)
-//            {
-//                 TIM_CCR(0,0,0,0);
-//                 Receive.off = 0X0F;
-//				
-//				rest_CONTROL = 1;
-//				
-//            }
+			//超过45度,锁死
+			
+			if (attitude.roll > 45.0f || attitude.roll < -45.0f || 
+                attitude.pitch > 45.0f || attitude.pitch < -45.0f)
+            {
+                 TIM_CCR(0,0,0,0);
+                 Receive.off = 0X0F;
+				
+				rest_CONTROL = 1;
+				
+            }
 			
 			
 					if ((Receive.off ==0X0A) &&  (rest_CONTROL ==0))
@@ -401,51 +348,219 @@ int main()
 					
 					
 					
-		}
 		
+	b++;
+		vTaskDelayUntil(&xLastWakeTime,xFrequency);//从时间点(xLastWakeTime)开始等待2ms(xFrequency)
+
+
+			
+//			vTaskDelay(pdMS_TO_TICKS(10));
+	}
+	
+}
+
+
+void task_nrf(void *pvParameters)
+{
+	
+
+	
+	while (1)
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		if (NRF24L01_ReceiveByte[1] ==0x0f )
+	{
+			if (NRF24L01_ADC_ReceiveByte() == 1)
+        {
+            
+            nrf_count = 0;
+			
+			if (NRF24L01_ReceiveByte[1] ==0x0f )
 		{
+			NRF24L01_TxMode();
+			
 			count ++;
 			
 			
 			NRF24L01_ADC_SendByte();
 			
+			
 			NRF24L01_ReceiveByte[1] = 0 ;
 			
-			
+			NRF24L01_RxMode();
 		}
+			
+			
+        }
+			
+
+	
+	a++;
+		vTaskDelay(pdMS_TO_TICKS(2));
+	
+	
+	
+//	vTaskDelay(pdMS_TO_TICKS(10));
+	}
+	
+	
+}
+
+
+
+
+
+void init_task(void *pvParameters)
+{
+	MPU6050_Init();
+	
+	MPU6050_Calibrate_Offset();
+	
+//	MPU6050_DMPInit();
+//	USART1_Init(115200);
+//	NRF24L01_Init();
+	TIM3_PWM_Init();
+	
+	NRF24L01_SendByte[0]=0;
+	
+	NRF24L01_SendByte[1] = 0;
+	count = 0;
+	uint8_t a;
+	
+	
+	
+//	ADC1_CH0_Init();
+	
+	NRF24L01_Init_();
+	
+	
+	
+//	TIM4_Int_Init();
+	
+
+	
+	NRF24L01_RxMode();
+	
+
+	
+	
+	PID_structuer_Init();
+
+	
+	
+	START_init();
+	
+	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+    IWDG_SetPrescaler(IWDG_Prescaler_64); 
+    IWDG_SetReload(250); 
+    IWDG_ReloadCounter();
+//    IWDG_Enable();
+	
+	
+	taskENTER_CRITICAL();
+	
+	
+	xTaskCreate( (TaskFunction_t) task_pid, // 函数指针, 任务函数
+						(const char *) "task_pid", // 任务的名字
+                        (uint16_t) 512, // 栈大小,单位为word,10表示40字节
+                        (void * ) NULL, // 调用任务函数时传入的参数
+                        (UBaseType_t) 3,    // 优先级
+                        (TaskHandle_t *) &PID_Task_Handler ); // 任务句柄, 以后使用它来操作这个任务
+	
+	xTaskCreate( (TaskFunction_t) task_nrf, // 函数指针, 任务函数
+						(const char *) "task_nrf", // 任务的名字
+                        (uint16_t) 512, // 栈大小,单位为word,10表示40字节
+                        (void * ) NULL, // 调用任务函数时传入的参数
+                        (UBaseType_t) 2,    // 优先级
+                        (TaskHandle_t *) &NRF_Task_Handler ); // 任务句柄, 以后使用它来操作这个任务
+
+	
+	
+	
+	
+	taskEXIT_CRITICAL();
+	
+	
+						
+						
+	vTaskDelete(NULL);					
+
+	
+	
+	
+
+}
+
+
+
+
+
+
+
+
+
+
+int main()
+{
+	DWT_Init();
+	
+	uint32_t realClock = SystemCoreClock; 
+	SystemCoreClockUpdate();
+	
+	SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));
 		
-		
-		
-		
-		
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+
+// 	OLED_Init();
+	
+	uint8_t err;
+	
+	a=0;
+	b=0;
+	
+	xTaskCreate( (TaskFunction_t) init_task, // 函数指针, 任务函数
+						(const char *) "init_task", // 任务的名字
+                        (uint16_t) 512, // 栈大小,单位为word,10表示40字节
+                        (void * ) NULL, // 调用任务函数时传入的参数
+                        (UBaseType_t) 4,    // 优先级
+                        (TaskHandle_t *) &INIT_Task_Handler ); // 任务句柄, 以后使用它来操作这个任务
+	
+	
+	
+	
+	
+	
+	vTaskStartScheduler();
+	
+	
+//						
+//		NRF24L01_Init_();
+//					
+//						
+//						
+//		NRF24L01_RxMode();
+//				
+						
+						
+						
+						
+						
+						
+	
+	
+	while (1)
+	{		
+//		NRF24L01_ADC_ReceiveByte();
+		err = 1;
 		
 	}
 	
 }
 
 
-
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+    // 进入这里说明栈溢出了
+    while(1);  // 在此处设断点
+}
 
 
 
