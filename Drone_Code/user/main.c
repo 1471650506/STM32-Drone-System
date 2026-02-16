@@ -91,15 +91,15 @@ void NRF24L01_ADC_SendByte(void)
 	NRF24L01_TxMode();
 	
 	
-//	vbat = Battery_GetVoltage();
-//	
-//	p1 = (uint8_t)((vbat-3)*100);
-//	
-//	
-//	
-//	
-//	
-//	p = Battery_GetPercent(vbat);
+	vbat = Battery_GetVoltage();
+	
+	p1 = (uint8_t)((vbat-3)*100);
+	
+	
+	
+	
+	
+	p = Battery_GetPercent(vbat);
 	
 	
 	
@@ -110,7 +110,7 @@ void NRF24L01_ADC_SendByte(void)
 	 NRF24L01_SendByte[4] = 0;//高度bmp280
 	 NRF24L01_SendByte[5] = Ack_Status;
 	 NRF24L01_SendByte[6] = p1;
-//	 NRF24L01_SendByte[7] = ADC_V_Send[2];
+	 NRF24L01_SendByte[7] = count;//接收计数
 //	 NRF24L01_SendByte[8] = ADC_V_Send[3]>>8;
 //	 NRF24L01_SendByte[9] = ADC_V_Send[3];
 //	 NRF24L01_SendByte[10] = ADC_V[4]>>8;
@@ -118,15 +118,15 @@ void NRF24L01_ADC_SendByte(void)
 	 
 	 
 	 
-	 NRF24L01_SendByte[12] = usart_s[0];
-	 NRF24L01_SendByte[13] = usart_s[1];
-	 NRF24L01_SendByte[14] = usart_s[2];
-	 NRF24L01_SendByte[15] = usart_s[3];
-	 NRF24L01_SendByte[16] = usart_s[4];
-	 NRF24L01_SendByte[17] = usart_s[5];
-	 NRF24L01_SendByte[18] = usart_s[6];
-	 NRF24L01_SendByte[19] = usart_s[7];
-	 NRF24L01_SendByte[20] = usart_s[8];
+//	 NRF24L01_SendByte[12] = usart_s[0];
+//	 NRF24L01_SendByte[13] = usart_s[1];
+//	 NRF24L01_SendByte[14] = usart_s[2];
+//	 NRF24L01_SendByte[15] = usart_s[3];
+//	 NRF24L01_SendByte[16] = usart_s[4];
+//	 NRF24L01_SendByte[17] = usart_s[5];
+//	 NRF24L01_SendByte[18] = usart_s[6];
+//	 NRF24L01_SendByte[19] = usart_s[7];
+//	 NRF24L01_SendByte[20] = usart_s[8];
 	
 	 
 	
@@ -187,7 +187,7 @@ uint8_t NRF24L01_ADC_ReceiveByte(void)
 	Receive.POWER = Y;
 	
 	
-	NRF24L01_SendByte[7] = Y;
+//	NRF24L01_SendByte[7] = Y;
 	
 	
 	return 1;
@@ -229,6 +229,8 @@ void START_init(void)
 	{
 		
 		NRF24L01_ADC_ReceiveByte();
+		
+		a = 1;
 		
 		switch(NRF24L01_ReceiveByte[24])
 		{
@@ -289,8 +291,13 @@ void task_pid(void *pvParameters)
 	const TickType_t xFrequency = pdMS_TO_TICKS(2);  //我要等待两个tick(2ms)
 	xLastWakeTime = xTaskGetTickCount(); //把当前的tick存入时间点变量
 	
+	
+	uint32_t start_time, end_time, run_time_us;
+	
 	while (1)
 	{
+		start_time = DWT->CYCCNT;
+		
 			IWDG_ReloadCounter();
 			
 			nrf_count++;
@@ -337,21 +344,21 @@ void task_pid(void *pvParameters)
 			
 						TIM_CCR(0,0,0,0);
 			
-						NRF24L01_ADC_SendByte();
+//						NRF24L01_ADC_SendByte();
 			
 					}
 			
 
 //							printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f  \r\n", usart_s[0], usart_s[1], usart_s[2], usart_s[3], usart_s[4], usart_s[5], usart_s[6], usart_s[7], usart_s[8], usart_s[9], usart_s[10], attitude.roll, attitude.pitch, attitude.yaw); //这个是用串口给vofa发送数据包
 
-					
-					
+					end_time = DWT->CYCCNT;
+					run_time_us = (end_time - start_time) / (SystemCoreClock / 1000000);
 					
 					
 		
 	b++;
 		vTaskDelayUntil(&xLastWakeTime,xFrequency);//从时间点(xLastWakeTime)开始等待2ms(xFrequency)
-
+//		vTaskDelay(pdMS_TO_TICKS(2));
 
 			
 //			vTaskDelay(pdMS_TO_TICKS(10));
@@ -456,6 +463,7 @@ void init_task(void *pvParameters)
 	
 	
 	taskENTER_CRITICAL();
+	
 	
 	
 	xTaskCreate( (TaskFunction_t) task_pid, // 函数指针, 任务函数
