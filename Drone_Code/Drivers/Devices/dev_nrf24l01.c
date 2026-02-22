@@ -316,7 +316,9 @@ uint8_t NRF24L01_Receive(void)
 //	NRF24L01_RxMode();
 	uint8_t CONFIG;
 	uint8_t Status;
+	uint8_t fifo_status;
 	Status = NRF24L01_ReadStatus();
+	fifo_status = NRF24L01_ReadReg(0x17);
 //	CONFIG = NRF24L01_ReadReg(NRF24L01_CONFIG);
 
 //		if ( CONFIG != 0X0F)
@@ -328,24 +330,24 @@ uint8_t NRF24L01_Receive(void)
 	
 //	CONFIG = NRF24L01_ReadReg(NRF24L01_CONFIG);
 	
-	if (Status&0X40)
+	if ((fifo_status&0X01) ==0 )
 	{
 		NRF24L01_ReadRxFIFO(NRF24L01_ReceiveByte,NRF24L01_RX_SendByte);
 		NRF24L01_WriteRge(NRF24L01_STATUS,0X40);
-		NRF24L01_ClearRxFIFO();
-		
-		timeout = 1000;
+//		NRF24L01_ClearRxFIFO();
+//		
+//		timeout = 1000;
 		
 		return 0;
 		
 	}
-	if (timeout-- == 0) 
-		{
-			timeout = 1000;
-			NRF24L01_Init_();
-			NRF24L01_RxMode();
-			return 1;  
-		}
+//	if (timeout-- == 0) 
+//		{
+//			timeout = 1000;
+//			NRF24L01_Init_();
+//			NRF24L01_RxMode();
+//			return 1;  
+//		}
 
 //	My_spi_ReadWrite(NRF24L01_STATUS,0X7E);
 		

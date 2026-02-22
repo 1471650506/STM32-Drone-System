@@ -37,7 +37,7 @@ void ADC1_CH0_Init(void)
     ADC_Init(ADC1, &ADC_InitStructure);
     
     /* 5. 通道选择：IN0, 采样时间至少 144cycles（分压 100K 需要长时间） */
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_0, 1, ADC_SampleTime_144Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_0, 1, ADC_SampleTime_480Cycles);
     
     /* 6. 启动 ADC */
     ADC_Cmd(ADC1, ENABLE);
@@ -72,8 +72,15 @@ uint16_t ADC1_Read(void)
 
 float Battery_GetVoltage(void)
 {
-    uint16_t raw = ADC1_Read();
-    float v_adc = raw * 3.3f / 4095.0f;
+	uint32_t raw_sum = 0;
+    
+    for(int i = 0; i < 8; i++) 
+    {
+        raw_sum += ADC1_Read();
+    }
+    uint16_t raw_avg = raw_sum >> 3;
+	
+    float v_adc = raw_avg * 3.3f / 4095.0f;
     float v_bat = v_adc * 2; // 分压系数2
 
     return v_bat;

@@ -191,7 +191,7 @@ void PID_structuer_Init(void)
 }
 
 
-void control_pid(EulerAngles_t* att_in,MPU6050_type* G,NRF_Receive* Receive)
+void control_pid(EulerAngles_t* att_in,MPU6050_type* G,volatile NRF_Receive* Receive)
 {
 	
 	EulerAngles_t Measure_Angle,Target_Angle;
@@ -220,6 +220,12 @@ void control_pid(EulerAngles_t* att_in,MPU6050_type* G,NRF_Receive* Receive)
 	PID_Postion_Cal(&PID_PIT_Rate, PID_PIT_Angle.OutPut, G->Y); //PITH角速度环PID （输入角度环的输出，输出电机控制量）
 	PID_Postion_Cal(&PID_YAW_Rate,Target_Angle.yaw*PID_YAW_Angle.P,G->Z); //YAW角速度环PID （输入角度，输出电机控制量）
 	
+//	//角速度环
+//	
+//	PID_Postion_Cal(&PID_ROL_Rate, PID_ROL_Angle.OutPut, G->Y); //ROLL角速度环PID （输入角度环的输出，输出电机控制量）
+//	PID_Postion_Cal(&PID_PIT_Rate, PID_PIT_Angle.OutPut, G->X); //PITH角速度环PID （输入角度环的输出，输出电机控制量）
+//	PID_Postion_Cal(&PID_YAW_Rate,Target_Angle.yaw*PID_YAW_Angle.P,G->Z); //YAW角速度环PID （输入角度，输出电机控制量）
+//	
 	
 	
 	
@@ -239,6 +245,10 @@ void control_pid(EulerAngles_t* att_in,MPU6050_type* G,NRF_Receive* Receive)
 		Moto_PWM_3 = Receive->POWER - PID_ROL_Rate.OutPut + PID_PIT_Rate.OutPut + PID_YAW_Rate.OutPut;
 		Moto_PWM_4 = Receive->POWER + PID_ROL_Rate.OutPut + PID_PIT_Rate.OutPut - PID_YAW_Rate.OutPut;		
 	
+//		Moto_PWM_1 = Receive->POWER;		
+//		Moto_PWM_2 = Receive->POWER;		
+//		Moto_PWM_3 = Receive->POWER;
+//		Moto_PWM_4 = Receive->POWER;		
 		
 		
 	} 

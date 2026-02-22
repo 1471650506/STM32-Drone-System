@@ -48,7 +48,7 @@ typedef struct
 }NRF_Receive;
 	
 
-extern  NRF_Receive Receive;
+extern volatile  NRF_Receive Receive;
 
 
  typedef union {

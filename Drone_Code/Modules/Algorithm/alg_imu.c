@@ -35,7 +35,7 @@ float LPF(float old, float new, float alpha)
 
 #define kp 1.50f 
 #define ki 0.005f 
-#define halft 0.001f 
+#define halft 0.0025f
 
 typedef struct {
     float roll;   // 滚转角

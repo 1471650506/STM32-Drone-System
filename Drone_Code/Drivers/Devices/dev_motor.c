@@ -25,7 +25,7 @@ void TIM3_PWM_Init(void)
 	
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;        // 复用功能
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;      // 推挽输出
-    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;        // 上拉
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;        // 上拉
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;  // 高速
 
     // 2.1 配置TIM3通道1和2对应的GPIOA引脚
@@ -48,7 +48,7 @@ void TIM3_PWM_Init(void)
 	
     TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
 	
-    TIM_TimeBaseInitStruct.TIM_Prescaler = 83;               // 预分频值PSC
+    TIM_TimeBaseInitStruct.TIM_Prescaler = 9;               // 预分频值PSC
     TIM_TimeBaseInitStruct.TIM_Period = 999;                 // 自动重装载值ARR
     TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up; // 向上计数

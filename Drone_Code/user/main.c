@@ -57,7 +57,7 @@ FloatPacket roll,pit,yaw;
 
 
 
-NRF_Receive Receive;
+volatile NRF_Receive Receive;
 
 
 MPU6050_type G;
@@ -224,11 +224,11 @@ void pid_receive(FloatPacket*p,FloatPacket*i,FloatPacket*d,uint8_t id)
 void START_init(void)
 {
 	
-	uint8_t id;
+	uint8_t id,R = 9;
 	while (1)
 	{
 		
-		NRF24L01_ADC_ReceiveByte();
+		R = NRF24L01_ADC_ReceiveByte();
 		
 		a = 1;
 		
@@ -288,7 +288,7 @@ void task_pid(void *pvParameters)
 {
 	
 	TickType_t xLastWakeTime;  //创建时间点变量
-	const TickType_t xFrequency = pdMS_TO_TICKS(2);  //我要等待两个tick(2ms)
+	const TickType_t xFrequency = pdMS_TO_TICKS(5);  //我要等待两个tick(2ms)
 	xLastWakeTime = xTaskGetTickCount(); //把当前的tick存入时间点变量
 	
 	
@@ -296,72 +296,71 @@ void task_pid(void *pvParameters)
 	
 	while (1)
 	{
-		start_time = DWT->CYCCNT;
+//		start_time = DWT->CYCCNT;
 		
 			IWDG_ReloadCounter();
 			
 			nrf_count++;
 			
 			
+			IMU(&attitude,&G);
+		
 			//未接收到数据锁死,并跳过解算
 			
 			if (nrf_count > 500) 
             {
                 TIM_CCR(0,0,0,0); 
-                Receive.off = 0X0F; 
-//                continue; 
-				
+				rest_CONTROL = 1;
             }
 			
 			
-			IMU(&attitude,&G);
+			
 			
 			
 			//超过45度,锁死
 			
-			if (attitude.roll > 45.0f || attitude.roll < -45.0f || 
+			else if (attitude.roll > 45.0f || attitude.roll < -45.0f || 
                 attitude.pitch > 45.0f || attitude.pitch < -45.0f)
             {
                  TIM_CCR(0,0,0,0);
-                 Receive.off = 0X0F;
 				
 				rest_CONTROL = 1;
 				
             }
 			
 			
-					if ((Receive.off ==0X0A) &&  (rest_CONTROL ==0))
-					{
-			 
-						control_pid(&attitude,&G,&Receive);
-			
-			 
-			
-					}
-					else if (Receive.off ==0X0F) 
-					{
-						rest_CONTROL = 0;
-			
-						TIM_CCR(0,0,0,0);
-			
-//						NRF24L01_ADC_SendByte();
-			
-					}
-			
+			else if ((Receive.off ==0X0A) &&  (rest_CONTROL ==0))
+			{
+	 
+				control_pid(&attitude,&G,&Receive);
+	
+	 
+	
+			}
+			else if (Receive.off ==0X0F) 
+			{
+				rest_CONTROL = 0;
+	
+				TIM_CCR(0,0,0,0);
+	
+	
+			}
+			else 
+			{
+				TIM_CCR(0,0,0,0);
+				
+			}
+	
 
 //							printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f  \r\n", usart_s[0], usart_s[1], usart_s[2], usart_s[3], usart_s[4], usart_s[5], usart_s[6], usart_s[7], usart_s[8], usart_s[9], usart_s[10], attitude.roll, attitude.pitch, attitude.yaw); //这个是用串口给vofa发送数据包
-
-					end_time = DWT->CYCCNT;
-					run_time_us = (end_time - start_time) / (SystemCoreClock / 1000000);
-					
+//							printf("%f,%f,%f,%f  \r\n", usart_s[0], usart_s[1], usart_s[2], usart_s[3]); //这个是用串口给vofa发送数据包
+//					end_time = DWT->CYCCNT;
+//					run_time_us = (end_time - start_time) / (SystemCoreClock / 1000000);
 					
 		
 	b++;
 		vTaskDelayUntil(&xLastWakeTime,xFrequency);//从时间点(xLastWakeTime)开始等待2ms(xFrequency)
-//		vTaskDelay(pdMS_TO_TICKS(2));
-
-			
-//			vTaskDelay(pdMS_TO_TICKS(10));
+					
 	}
 	
 }
@@ -375,7 +374,7 @@ void task_nrf(void *pvParameters)
 	while (1)
 		
 	{
-			if (NRF24L01_ADC_ReceiveByte() == 1)
+			while (NRF24L01_ADC_ReceiveByte() == 1)
         {
             
             nrf_count = 0;
@@ -400,6 +399,7 @@ void task_nrf(void *pvParameters)
 			
 
 	
+		
 	a++;
 		vTaskDelay(pdMS_TO_TICKS(2));
 	
@@ -422,7 +422,7 @@ void init_task(void *pvParameters)
 	MPU6050_Calibrate_Offset();
 	
 //	MPU6050_DMPInit();
-//	USART1_Init(115200);
+	USART1_Init(115200);
 //	NRF24L01_Init();
 	TIM3_PWM_Init();
 	
@@ -434,7 +434,7 @@ void init_task(void *pvParameters)
 	
 	
 	
-//	ADC1_CH0_Init();
+	ADC1_CH0_Init();
 	
 	NRF24L01_Init_();
 	
@@ -449,11 +449,14 @@ void init_task(void *pvParameters)
 
 	
 	
-	PID_structuer_Init();
+	
 
 	
 	
 	START_init();
+	
+	
+	PID_structuer_Init();
 	
 	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
     IWDG_SetPrescaler(IWDG_Prescaler_64); 
@@ -517,12 +520,12 @@ int main()
 		
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
-// 	OLED_Init();
 	
 	uint8_t err;
 	
 	a=0;
 	b=0;
+
 	
 	xTaskCreate( (TaskFunction_t) init_task, // 函数指针, 任务函数
 						(const char *) "init_task", // 任务的名字
@@ -539,13 +542,7 @@ int main()
 	vTaskStartScheduler();
 	
 	
-//						
-//		NRF24L01_Init_();
-//					
-//						
-//						
-//		NRF24L01_RxMode();
-//				
+			
 						
 						
 						
@@ -556,19 +553,14 @@ int main()
 	
 	while (1)
 	{		
-//		NRF24L01_ADC_ReceiveByte();
 		err = 1;
+		
 		
 	}
 	
 }
 
 
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
-{
-    // 进入这里说明栈溢出了
-    while(1);  // 在此处设断点
-}
 
 
 

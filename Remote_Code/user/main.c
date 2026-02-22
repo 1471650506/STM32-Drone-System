@@ -59,22 +59,22 @@ FloatPacket roll,pit,yaw;
 void pid_set(void)
 {
 	//内环pid
-	PID_ROL_Rate_p.f = 1.55f;
-	PID_PIT_Rate_p.f = 1.55f;
-	PID_YAW_Rate_p.f = -1.0f;
+	PID_ROL_Rate_p.f = 1.05f;
+	PID_PIT_Rate_p.f = 1.05f;
+	PID_YAW_Rate_p.f = 1.5f;
 	
-	PID_ROL_Rate_i.f = 0.03f;
-	PID_PIT_Rate_i.f = 0.03f;
+	PID_ROL_Rate_i.f = 0.025f;
+	PID_PIT_Rate_i.f = 0.025f;
 	PID_YAW_Rate_i.f = 0.00f;
 	
-	PID_ROL_Rate_d.f = 0.4f;
-    PID_PIT_Rate_d.f = 0.4f;
+	PID_ROL_Rate_d.f = 0.35f;
+    PID_PIT_Rate_d.f = 0.35f;
     PID_YAW_Rate_d.f = 0;
 
 	//外环pid
 	
-	PID_ROL_Angle_p.f =5.00f;
-	PID_PIT_Angle_p.f = -5.00f;
+	PID_ROL_Angle_p.f =4.50f;
+	PID_PIT_Angle_p.f = -4.50f;
 	PID_YAW_Angle_p.f = 0;
 	
 	PID_ROL_Angle_i.f = 0;
@@ -285,7 +285,7 @@ void link_init(void)
 			
 			
 			 
-			 Delay_ms(1);
+//			 Delay_ms(1);
 			 
 			 NRF24L01_RxMode();
 			 
@@ -409,13 +409,12 @@ int main(void)
 			
 			
 			uint16_t wait_timeout = 0;
-			while(wait_timeout < 500) // 等待约5ms (具体时间看你的Delay实现)
+			while(wait_timeout < 500) 
 			{
-				// 如果接收成功(返回0表示成功，看你的Receive函数逻辑)
 				if(NRF24L01_ADC_ReceiveByte() == 0) 
 				{
-					menu_structuer(); // 处理数据
-					break; // 收到数据就退出等待
+					menu_structuer(); 
+					break; 
 				}
 				Delay_us(10); 
 				wait_timeout++;

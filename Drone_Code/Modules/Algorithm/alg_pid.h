@@ -36,7 +36,7 @@ void PID_Postion_Cal(PID_TYPE*PID,float target,float measure) ;
 
 void PID_structuer_Init(void);
 
-void control_pid(EulerAngles_t* att_in,MPU6050_type* G,NRF_Receive* Receive);
+void control_pid(EulerAngles_t* att_in,MPU6050_type* G,volatile NRF_Receive* Receive);
 
 
 
